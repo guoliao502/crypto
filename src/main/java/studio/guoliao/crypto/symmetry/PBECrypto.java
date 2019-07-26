@@ -1,15 +1,11 @@
 package studio.guoliao.crypto.symmetry;
 
 import studio.guoliao.crypto.Crypto;
-import studio.guoliao.crypto.Provider;
 import studio.guoliao.crypto.constant.PBEAlgEnum;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEParameterSpec;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 
 /**
  * User: guoliao
@@ -24,6 +20,7 @@ public class PBECrypto implements Crypto {
     private int iterationCount = 20;
 
     private String alg;
+    private java.security.Provider provider = PROVIDER;
 
     public PBECrypto(PBEAlgEnum pbeAlgEnum) {
         this.alg = pbeAlgEnum.getValue();
@@ -57,14 +54,21 @@ public class PBECrypto implements Crypto {
 
     private byte[] cryptoImpl(int mode, Key key,  byte[] data){
         try {
-            Cipher cipher = Cipher.getInstance(alg, Provider.PROVIDER);
+            Cipher cipher = Cipher.getInstance(alg, provider);
             PBEParameterSpec parameterSpec = new PBEParameterSpec(slat, iterationCount);
             SecretKey tmp = (SecretKey) key;
             cipher.init(mode, tmp, parameterSpec);
             return cipher.doFinal(data);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException |
+                InvalidKeyException | BadPaddingException |
+                IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
             LOGGER.error(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 }

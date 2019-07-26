@@ -8,6 +8,6 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ECBTest.class,
-        CBCTest.class, PBETest.class})
+        CBCTest.class, PBETest.class, DigestTest.class})
 public class AppTest {
 }

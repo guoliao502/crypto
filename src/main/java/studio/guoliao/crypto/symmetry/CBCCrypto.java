@@ -1,7 +1,6 @@
 package studio.guoliao.crypto.symmetry;
 
 import studio.guoliao.crypto.Crypto;
-import studio.guoliao.crypto.Provider;
 import studio.guoliao.crypto.constant.PaddingEnum;
 
 import javax.crypto.BadPaddingException;
@@ -10,7 +9,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.*;
-import java.security.spec.InvalidParameterSpecException;
 
 /**
  * User: guoliao
@@ -28,6 +26,8 @@ public class CBCCrypto implements Crypto {
     private String padding;
 
     private byte[] iv;
+
+    private Provider provider = PROVIDER;
 
     public CBCCrypto(PaddingEnum paddingEnum, byte[] iv) {
         this.padding = paddingEnum.getValue();
@@ -53,19 +53,20 @@ public class CBCCrypto implements Crypto {
         try {
             String alg = key.getAlgorithm();
             String algWithPadding = String.format(FMT, alg, padding);
-            Cipher cipher = Cipher.getInstance(algWithPadding, Provider.PROVIDER);
-            AlgorithmParameters parameter = AlgorithmParameters.getInstance(alg);
-            parameter.init(new IvParameterSpec(iv));
-            cipher.init(mode, key, parameter);
+            System.out.println(algWithPadding);
+            Cipher cipher = Cipher.getInstance(algWithPadding, provider);
+            cipher.init(mode, key, new IvParameterSpec(iv));
             return cipher.doFinal(data);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException |
                 NoSuchPaddingException | NoSuchAlgorithmException |
-                BadPaddingException | InvalidParameterSpecException |
-                IllegalBlockSizeException e) {
-
-            LOGGER.error(e.getMessage());
+                BadPaddingException | IllegalBlockSizeException e) {
+            System.out.println(e);
         }
         return null;
     }
 
+    @Override
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 }

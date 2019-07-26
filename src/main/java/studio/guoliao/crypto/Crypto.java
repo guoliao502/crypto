@@ -1,9 +1,5 @@
 package studio.guoliao.crypto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import studio.guoliao.crypto.symmetry.ECBCrypto;
-
 import java.security.Key;
 
 /**
@@ -12,9 +8,7 @@ import java.security.Key;
  * Time: 下午5:30
  * Description: 加密接口
  */
-public interface Crypto {
-
-    Logger LOGGER = LoggerFactory.getLogger(ECBCrypto.class);
+public interface Crypto extends ProviderHolder {
 
     byte[] encrypt(Key key, byte[] data);
 

@@ -4,6 +4,7 @@ package studio.guoliao.crypto.asymmetry;
 import studio.guoliao.crypto.Crypto;
 
 import java.security.Key;
+import java.security.Provider;
 
 /**
  * User: guoliao
@@ -13,6 +14,8 @@ import java.security.Key;
  */
 public class CommonCrypto implements Crypto {
 
+    private Provider provider = PROVIDER;
+
     @Override
     public byte[] encrypt(Key key, byte[] data) {
         return new byte[0];
@@ -21,5 +24,10 @@ public class CommonCrypto implements Crypto {
     @Override
     public byte[] decrypt(Key key, byte[] encryptedData) {
         return new byte[0];
+    }
+
+    @Override
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 }

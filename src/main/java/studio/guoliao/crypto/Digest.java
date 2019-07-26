@@ -1,7 +1,6 @@
 package studio.guoliao.crypto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -10,9 +9,7 @@ import org.slf4j.LoggerFactory;
  * Time: 下午6:00
  * Description:
  */
-public interface Digest {
+public interface Digest extends ProviderHolder {
 
-    Logger LOGGER = LoggerFactory.getLogger(Digest.class);
-
-    byte[] digest(byte[] data);
+    byte[] digest(byte[] data) throws NoSuchAlgorithmException;
 }

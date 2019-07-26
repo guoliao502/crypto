@@ -1,10 +1,11 @@
 package studio.guoliao.crypto.digest;
 
 import studio.guoliao.crypto.Digest;
-import studio.guoliao.crypto.Provider;
+import studio.guoliao.crypto.ProviderHolder;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 
 /**
  * User: guoliao
@@ -26,6 +27,8 @@ public class CommonDigest implements Digest {
 
     private String alg;
 
+    private Provider provider = PROVIDER;
+
     public CommonDigest(String alg) {
         this.alg = alg;
     }
@@ -33,7 +36,7 @@ public class CommonDigest implements Digest {
     @Override
     public byte[] digest(byte[] data) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance(alg, Provider.PROVIDER);
+            MessageDigest messageDigest = MessageDigest.getInstance(alg, ProviderHolder.PROVIDER);
             messageDigest.update(data);
             return messageDigest.digest();
         } catch (NoSuchAlgorithmException e) {
@@ -48,5 +51,10 @@ public class CommonDigest implements Digest {
 
     public void setAlg(String alg) {
         this.alg = alg;
+    }
+
+    @Override
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 }

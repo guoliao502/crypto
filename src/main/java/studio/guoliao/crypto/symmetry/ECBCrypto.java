@@ -1,7 +1,6 @@
 package studio.guoliao.crypto.symmetry;
 
 import studio.guoliao.crypto.Crypto;
-import studio.guoliao.crypto.Provider;
 import studio.guoliao.crypto.constant.PaddingEnum;
 
 import javax.crypto.BadPaddingException;
@@ -11,6 +10,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 
 /**
  * User: guoliao
@@ -22,6 +22,8 @@ import java.security.NoSuchAlgorithmException;
 public class ECBCrypto implements Crypto {
 
     private static final String FMT = "%s/ECB/%s";
+
+    private Provider provider = PROVIDER;
 
     private String padding;
 
@@ -46,15 +48,24 @@ public class ECBCrypto implements Crypto {
     private byte[] cryptoImpl(int mode, byte[] data, Key key){
         try {
             String alg = key.getAlgorithm();
-            String algWithPadding = String.format(FMT, alg, padding);
-            Cipher cipher = Cipher.getInstance(algWithPadding, Provider.PROVIDER);
+            String algWithPadding = dealAlg(alg);
+            Cipher cipher = Cipher.getInstance(algWithPadding, provider);
             cipher.init(mode, key);
             return cipher.doFinal(data);
         } catch (NoSuchAlgorithmException | InvalidKeyException |
                 NoSuchPaddingException | BadPaddingException |
                 IllegalBlockSizeException e) {
-            LOGGER.error(e.getMessage());
+            System.out.println(e);
         }
         return null;
+    }
+
+    private String dealAlg(String alg){
+        return (padding == null || padding.isEmpty()) ? alg : String.format(FMT, alg, padding);
+    }
+
+    @Override
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 }
