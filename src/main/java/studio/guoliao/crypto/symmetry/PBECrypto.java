@@ -1,11 +1,13 @@
 package studio.guoliao.crypto.symmetry;
 
-import studio.guoliao.crypto.Crypto;
 import studio.guoliao.crypto.constant.PBEAlgEnum;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEParameterSpec;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * User: guoliao
@@ -13,30 +15,29 @@ import java.security.*;
  * Time: 下午6:20
  * Description:
  */
-public class PBECrypto implements Crypto {
+public class PBECrypto extends AbstractSymmetryCrypto {
 
     private byte[] slat = "randomSlat".getBytes();
 
     private int iterationCount = 20;
 
     private String alg;
-    private java.security.Provider provider = PROVIDER;
 
     public PBECrypto(PBEAlgEnum pbeAlgEnum) {
-        this.alg = pbeAlgEnum.getValue();
+        this(pbeAlgEnum.getValue());
     }
 
     public PBECrypto(String alg) {
+        super();
         this.alg = alg;
     }
 
     public PBECrypto(PBEAlgEnum pbeAlg, byte[] slat, int iterationCount) {
-        this.slat = slat;
-        this.iterationCount = iterationCount;
-        this.alg = pbeAlg.getValue();
+        this(pbeAlg.getValue(), slat, iterationCount);
     }
 
     public PBECrypto(String alg, byte[] slat, int iterationCount) {
+        super();
         this.slat = slat;
         this.iterationCount = iterationCount;
         this.alg = alg;
@@ -52,6 +53,7 @@ public class PBECrypto implements Crypto {
         return cryptoImpl(Cipher.DECRYPT_MODE, key, encryptedData);
     }
 
+
     private byte[] cryptoImpl(int mode, Key key,  byte[] data){
         try {
             Cipher cipher = Cipher.getInstance(alg, provider);
@@ -65,10 +67,5 @@ public class PBECrypto implements Crypto {
             LOGGER.error(e.getMessage());
         }
         return null;
-    }
-
-    @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
     }
 }

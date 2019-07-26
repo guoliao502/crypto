@@ -1,6 +1,5 @@
 package studio.guoliao.crypto.symmetry;
 
-import studio.guoliao.crypto.Crypto;
 import studio.guoliao.crypto.constant.PaddingEnum;
 
 import javax.crypto.BadPaddingException;
@@ -19,7 +18,7 @@ import java.security.*;
  *      des 8字节长度
  *      aes 16字节长度
  */
-public class CBCCrypto implements Crypto {
+public class CBCCrypto extends AbstractSymmetryCrypto {
 
     private static final String FMT = "%s/CBC/%s";
 
@@ -27,14 +26,14 @@ public class CBCCrypto implements Crypto {
 
     private byte[] iv;
 
-    private Provider provider = PROVIDER;
-
     public CBCCrypto(PaddingEnum paddingEnum, byte[] iv) {
+        super();
         this.padding = paddingEnum.getValue();
         this.iv = iv;
     }
 
     public CBCCrypto(String padding, byte[] iv) {
+        super();
         this.padding = padding;
         this.iv = iv;
     }
@@ -52,8 +51,7 @@ public class CBCCrypto implements Crypto {
     private byte[] cryptoImpl(int mode, byte[] data, Key key){
         try {
             String alg = key.getAlgorithm();
-            String algWithPadding = String.format(FMT, alg, padding);
-            System.out.println(algWithPadding);
+            String algWithPadding = dealAlg(alg);
             Cipher cipher = Cipher.getInstance(algWithPadding, provider);
             cipher.init(mode, key, new IvParameterSpec(iv));
             return cipher.doFinal(data);
@@ -65,8 +63,7 @@ public class CBCCrypto implements Crypto {
         return null;
     }
 
-    @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    private String dealAlg(String alg){
+        return (padding == null || padding.isEmpty()) ? alg : String.format(FMT, alg, padding);
     }
 }

@@ -1,6 +1,5 @@
 package studio.guoliao.crypto.symmetry;
 
-import studio.guoliao.crypto.Crypto;
 import studio.guoliao.crypto.constant.PaddingEnum;
 
 import javax.crypto.BadPaddingException;
@@ -10,7 +9,6 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
 
 /**
  * User: guoliao
@@ -19,11 +17,9 @@ import java.security.Provider;
  * Description: ecb加密模式
  *  如果需要使用nopadding模式，需要数据长度为64的整数倍
  */
-public class ECBCrypto implements Crypto {
+public class ECBCrypto extends AbstractSymmetryCrypto{
 
     private static final String FMT = "%s/ECB/%s";
-
-    private Provider provider = PROVIDER;
 
     private String padding;
 
@@ -45,6 +41,7 @@ public class ECBCrypto implements Crypto {
         return cryptoImpl(Cipher.DECRYPT_MODE, encryptedData, key);
     }
 
+
     private byte[] cryptoImpl(int mode, byte[] data, Key key){
         try {
             String alg = key.getAlgorithm();
@@ -62,10 +59,5 @@ public class ECBCrypto implements Crypto {
 
     private String dealAlg(String alg){
         return (padding == null || padding.isEmpty()) ? alg : String.format(FMT, alg, padding);
-    }
-
-    @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
     }
 }

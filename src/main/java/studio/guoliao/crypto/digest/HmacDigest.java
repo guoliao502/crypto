@@ -1,12 +1,9 @@
 package studio.guoliao.crypto.digest;
 
-import studio.guoliao.crypto.Digest;
-
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
 
 /**
  * User: guoliao
@@ -14,7 +11,7 @@ import java.security.Provider;
  * Time: 下午12:00
  * Description:
  */
-public class HmacDigest implements Digest {
+public class HmacDigest extends AbstractDigest{
 
     public static final String HMAC_MD5 = "HmacMd5";
 
@@ -32,8 +29,6 @@ public class HmacDigest implements Digest {
 
     private String alg;
 
-    private Provider provider;
-
     public HmacDigest(String alg, SecretKey key) {
         this.key = key;
         this.alg = alg;
@@ -42,7 +37,7 @@ public class HmacDigest implements Digest {
     @Override
     public byte[] digest(byte[] data) {
         try {
-            Mac mac = Mac.getInstance(alg);
+            Mac mac = Mac.getInstance(alg, provider);
             mac.init(key);
             return mac.doFinal(data);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
@@ -59,8 +54,4 @@ public class HmacDigest implements Digest {
         return alg;
     }
 
-    @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
 }

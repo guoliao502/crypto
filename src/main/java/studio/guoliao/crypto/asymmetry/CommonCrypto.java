@@ -12,7 +12,7 @@ import java.security.Provider;
  * Time: 下午6:06
  * Description:
  */
-public class CommonCrypto implements Crypto {
+public abstract class CommonCrypto implements Crypto {
 
     private Provider provider = PROVIDER;
 

@@ -1,11 +1,7 @@
 package studio.guoliao.crypto.digest;
 
-import studio.guoliao.crypto.Digest;
-import studio.guoliao.crypto.ProviderHolder;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
 
 /**
  * User: guoliao
@@ -13,7 +9,7 @@ import java.security.Provider;
  * Time: 下午6:01
  * Description:
  */
-public class CommonDigest implements Digest {
+public class CommonDigest extends AbstractDigest{
 
     public static final CommonDigest MD5_DIGEST = new CommonDigest("MD5");
 
@@ -27,16 +23,15 @@ public class CommonDigest implements Digest {
 
     private String alg;
 
-    private Provider provider = PROVIDER;
-
     public CommonDigest(String alg) {
+        super();
         this.alg = alg;
     }
 
     @Override
     public byte[] digest(byte[] data) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance(alg, ProviderHolder.PROVIDER);
+            MessageDigest messageDigest = MessageDigest.getInstance(alg, provider);
             messageDigest.update(data);
             return messageDigest.digest();
         } catch (NoSuchAlgorithmException e) {
@@ -51,10 +46,5 @@ public class CommonDigest implements Digest {
 
     public void setAlg(String alg) {
         this.alg = alg;
-    }
-
-    @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
     }
 }
