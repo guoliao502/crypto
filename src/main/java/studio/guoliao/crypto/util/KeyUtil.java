@@ -2,6 +2,7 @@ package studio.guoliao.crypto.util;
 
 import studio.guoliao.crypto.ProviderHolder;
 import studio.guoliao.crypto.constant.PBEAlgEnum;
+import studio.guoliao.crypto.model.KeyDescription;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -22,26 +23,6 @@ import java.security.spec.InvalidKeySpecException;
  * Description: 提供常见的密钥操作
  */
 public class KeyUtil {
-
-    /**
-     * 根据指定算法产生一个一次性密钥
-     * @param keyDescription
-     * @see KeyDescription*/
-    public static SecretKey generateOnceKey(KeyDescription keyDescription) throws NoSuchAlgorithmException {
-        return generateOnceKey(keyDescription, ProviderHolder.PROVIDER);
-    }
-
-    /**
-     * 根据指定算法产生一个一次性密钥
-     * @param keyDescription
-     * @param provider 
-     * @see KeyDescription*/
-    public static SecretKey generateOnceKey(KeyDescription keyDescription, Provider provider) throws NoSuchAlgorithmException {
-        SecureRandom secureRandom = new SecureRandom();
-        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), provider);
-        generator.init(keyDescription.getLength(), secureRandom);
-        return generator.generateKey();
-    }
 
     /**
      * 根据指定算法、长度、随记数种子产生一个固定密钥
@@ -106,6 +87,7 @@ public class KeyUtil {
     public static SecretKey generateRandomKey(KeyDescription keyDescription, byte[] randomSeed, 
                                               Provider provider) throws NoSuchAlgorithmException {
         SecureRandom secureRandom = new SecureRandom();
+        secureRandom.setSeed(randomSeed);
         KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), provider);
         generator.init(secureRandom);
         return generator.generateKey();

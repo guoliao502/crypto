@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import studio.guoliao.crypto.constant.PaddingEnum;
 import studio.guoliao.crypto.symmetry.CBCCrypto;
-import studio.guoliao.crypto.util.KeyDescription;
+import studio.guoliao.crypto.model.KeyDescription;
 import studio.guoliao.crypto.util.KeyUtil;
 
 import javax.crypto.SecretKey;
@@ -87,7 +87,7 @@ public class CBCTest {
 
     private void testImpl(String data, KeyDescription keyDescription, PaddingEnum padding, byte[] iv) throws NoSuchAlgorithmException {
         byte[] plain = data.getBytes();
-        SecretKey key = KeyUtil.generateOnceKey(keyDescription);
+        SecretKey key = KeyUtil.generateRandomKey(keyDescription);
         System.out.println(key.getAlgorithm());
         CBCCrypto crypto = new CBCCrypto(padding, iv);
         byte[] encrypted = crypto.encrypt(key, plain);

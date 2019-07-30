@@ -1,10 +1,11 @@
 package studio.guoliao;
 
 import org.apache.commons.codec.binary.Base64;
+import org.junit.Assert;
 import org.junit.Test;
-import studio.guoliao.crypto.constant.PBEAlgEnum;
 import studio.guoliao.crypto.digest.CommonDigest;
 import studio.guoliao.crypto.digest.HmacDigest;
+import studio.guoliao.crypto.model.KeyDescription;
 import studio.guoliao.crypto.util.KeyUtil;
 
 import javax.crypto.SecretKey;
@@ -37,9 +38,10 @@ public class DigestTest {
     @Test
     public void hmacDigest() throws InvalidKeySpecException, NoSuchAlgorithmException {
         String data = "guoliao";
-        SecretKey key = KeyUtil.generatePBEKey(PBEAlgEnum.SHA1_AES128_CBC, "guoliao");
+        SecretKey key = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", data.getBytes());
         HmacDigest digest = new HmacDigest(HmacDigest.HMAC_MD5, key);
         byte[] buf = digest.digest(data.getBytes());
         System.out.println(Base64.encodeBase64String(buf));
+        Assert.assertNotNull("", buf);
     }
 }

@@ -1,4 +1,4 @@
-package studio.guoliao.crypto.util;
+package studio.guoliao.crypto.model;
 
 /**
  * User: guoliao

@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import studio.guoliao.crypto.constant.PaddingEnum;
 import studio.guoliao.crypto.symmetry.ECBCrypto;
-import studio.guoliao.crypto.util.KeyDescription;
+import studio.guoliao.crypto.model.KeyDescription;
 import studio.guoliao.crypto.util.KeyUtil;
 
 import javax.crypto.SecretKey;
@@ -27,7 +27,7 @@ public class ECBTest {
 
     @Test
     public void desNoPaddingTest() throws NoSuchAlgorithmException {
-        testImpl("helloworldhelloworldhelloworldhelloworldhelloworldhelloworld1234", KeyDescription.DES_56, PaddingEnum.NO_PADDING);
+        testImpl("12345678", KeyDescription.DES_56, PaddingEnum.NO_PADDING);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class ECBTest {
 
     @Test
     public void desedeNoPaddingTest() throws NoSuchAlgorithmException {
-        testImpl("helloworldhelloworldhelloworldhelloworldhelloworldhelloworld1234",
+        testImpl("12345678",
                 KeyDescription.DESede_168, PaddingEnum.NO_PADDING);
     }
 
@@ -69,7 +69,7 @@ public class ECBTest {
 
     private void testImpl(String data, KeyDescription keyDescription, PaddingEnum padding) throws NoSuchAlgorithmException {
         byte[] plain = data.getBytes();
-        SecretKey key = KeyUtil.generateOnceKey(keyDescription);
+        SecretKey key = KeyUtil.generateRandomKey(keyDescription);
         System.out.println(key.getAlgorithm());
         ECBCrypto crypto = new ECBCrypto(padding);
         byte[] encrypted = crypto.encrypt(key, plain);

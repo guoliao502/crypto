@@ -41,7 +41,7 @@ public class HmacDigest extends AbstractDigest{
             mac.init(key);
             return mac.doFinal(data);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            LOGGER.error(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
