@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# crypto
-java crypto api use bouncycastle
-=======
 ## easy to use java crypto api 
 * default use bouncy castle provider
 * users can custom provider
@@ -155,4 +151,3 @@ public class Test{
 * more detail in test case
 ### 联系方式
 <p><a href="guoliao502@163.com">guoliao502@163.com</a></a></p>
->>>>>>> add test case；license
