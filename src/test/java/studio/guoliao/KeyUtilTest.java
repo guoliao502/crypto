@@ -20,8 +20,8 @@ public class KeyUtilTest {
 
     @Test
     public void genSameKey() throws NoSuchAlgorithmException {
-        SecretKey key1 = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "guoliao".getBytes());
-        SecretKey keyw = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "guoliao".getBytes(), ProviderHolder.PROVIDER);
+        SecretKey key1 = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "helloworld".getBytes());
+        SecretKey keyw = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "helloworld".getBytes(), ProviderHolder.PROVIDER);
         byte[] buf = key1.getEncoded();
         byte[] buf2 = keyw.getEncoded();
         boolean result = Arrays.equals(buf, buf2);
