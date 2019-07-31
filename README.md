@@ -99,9 +99,9 @@ public class KeyUtil {
 ```
 * symmetry crypto api
 ```
-public byte[] encrypt(byte[] buf);
-public String encryptToBase64(byte[] buf);
-public String encryptToHex(byte[] buf);
+public byte[] encrypt(Key key, byte[] buf);
+public String encryptToBase64(Key key, byte[] buf);
+public String encryptToHex(Key key, byte[] buf);
 public byte[] decryptFromBase64(Key key, String encryptedData);
 public byte[] decryptFromHex(Key key, String encryptedData);
 ```
