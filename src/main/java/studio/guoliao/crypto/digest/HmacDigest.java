@@ -37,7 +37,7 @@ public class HmacDigest extends AbstractDigest{
     @Override
     public byte[] digest(byte[] data) {
         try {
-            Mac mac = Mac.getInstance(alg, provider);
+            Mac mac = Mac.getInstance(alg, providerHolder.getProvider());
             mac.init(key);
             return mac.doFinal(data);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {

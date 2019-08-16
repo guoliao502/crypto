@@ -14,5 +14,23 @@ public interface ProviderHolder {
 
     java.security.Provider PROVIDER = new BouncyCastleProvider();
 
+    static ProviderHolder newInstance(){
+        return new ProviderHolder() {
+            private Provider provider = PROVIDER;
+            @Override
+            public void setProvider(Provider provider) {
+                this.provider = provider;
+            }
+            @Override
+            public Provider getProvider(){
+                return this.provider;
+            }
+        };
+    }
+
     void setProvider(Provider provider);
+
+    default Provider getProvider(){
+        return PROVIDER;
+    }
 }

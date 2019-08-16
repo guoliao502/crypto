@@ -52,7 +52,7 @@ public class ECBCrypto extends AbstractSymmetryCrypto{
         try {
             String alg = key.getAlgorithm();
             String algWithPadding = dealAlg(alg);
-            Cipher cipher = Cipher.getInstance(algWithPadding, provider);
+            Cipher cipher = Cipher.getInstance(algWithPadding, providerHolder.getProvider());
             cipher.init(mode, key);
             return cipher.doFinal(data);
         } catch (NoSuchAlgorithmException | InvalidKeyException |

@@ -1,5 +1,6 @@
 package studio.guoliao;
 
+import com.sun.crypto.provider.SunJCE;
 import org.junit.Assert;
 import org.junit.Test;
 import studio.guoliao.crypto.ProviderHolder;
@@ -20,8 +21,12 @@ public class KeyUtilTest {
 
     @Test
     public void genSameKey() throws NoSuchAlgorithmException {
-        SecretKey key1 = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "helloworld".getBytes());
-        SecretKey keyw = KeyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "helloworld".getBytes(), ProviderHolder.PROVIDER);
+        ProviderHolder providerHolder = ProviderHolder.newInstance();
+        KeyUtil keyUtil = new KeyUtil();
+        SecretKey key1 = keyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "helloworld".getBytes());
+        providerHolder.setProvider(new SunJCE());
+        keyUtil.setProviderHolder(providerHolder);
+        SecretKey keyw = keyUtil.generateSameKey(KeyDescription.DES_56, "SHA1PRNG", "helloworld".getBytes());
         byte[] buf = key1.getEncoded();
         byte[] buf2 = keyw.getEncoded();
         boolean result = Arrays.equals(buf, buf2);

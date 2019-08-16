@@ -31,7 +31,7 @@ public class CommonDigest extends AbstractDigest{
     @Override
     public byte[] digest(byte[] data) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance(alg, provider);
+            MessageDigest messageDigest = MessageDigest.getInstance(alg, providerHolder.getProvider());
             messageDigest.update(data);
             return messageDigest.digest();
         } catch (NoSuchAlgorithmException e) {

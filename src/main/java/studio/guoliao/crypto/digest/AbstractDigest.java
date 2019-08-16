@@ -8,7 +8,6 @@ import studio.guoliao.crypto.Digest;
 import studio.guoliao.crypto.ProviderHolder;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
 
 /**
  * User: guoliao
@@ -20,7 +19,7 @@ public abstract class AbstractDigest implements Digest {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(AbstractDigest.class);
 
-    protected Provider provider = ProviderHolder.PROVIDER;
+    ProviderHolder providerHolder = ProviderHolder.newInstance();
 
     @Override
     public String digestToBase64(byte[] data) throws NoSuchAlgorithmException {
@@ -35,7 +34,7 @@ public abstract class AbstractDigest implements Digest {
     }
 
     @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setProviderHolder(ProviderHolder providerHolder){
+        this.providerHolder = providerHolder;
     }
 }

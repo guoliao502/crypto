@@ -8,7 +8,7 @@ import org.apache.commons.codec.DecoderException;
  * Time: 下午5:30
  * Description: 加解密功能接口
  */
-public interface Crypto extends ProviderHolder {
+public interface Crypto extends ProviderChangeable{
 
     byte[] encrypt(byte[] data);
 

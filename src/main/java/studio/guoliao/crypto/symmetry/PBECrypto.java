@@ -58,7 +58,7 @@ public class PBECrypto extends AbstractSymmetryCrypto {
 
     private byte[] cryptoImpl(int mode, Key key,  byte[] data){
         try {
-            Cipher cipher = Cipher.getInstance(alg, provider);
+            Cipher cipher = Cipher.getInstance(alg, providerHolder.getProvider());
             PBEParameterSpec parameterSpec = new PBEParameterSpec(slat, iterationCount);
             SecretKey tmp = (SecretKey) key;
             cipher.init(mode, tmp, parameterSpec);

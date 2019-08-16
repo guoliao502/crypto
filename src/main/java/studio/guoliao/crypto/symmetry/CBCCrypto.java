@@ -7,7 +7,10 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * User: guoliao
@@ -55,7 +58,7 @@ public class CBCCrypto extends AbstractSymmetryCrypto {
         try {
             String alg = key.getAlgorithm();
             String algWithPadding = dealAlg(alg);
-            Cipher cipher = Cipher.getInstance(algWithPadding, provider);
+            Cipher cipher = Cipher.getInstance(algWithPadding, providerHolder.getProvider());
             cipher.init(mode, key, new IvParameterSpec(iv));
             return cipher.doFinal(data);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException |

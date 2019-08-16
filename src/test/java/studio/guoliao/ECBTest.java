@@ -69,7 +69,8 @@ public class ECBTest {
 
     private void testImpl(String data, KeyDescription keyDescription, PaddingEnum padding) throws NoSuchAlgorithmException {
         byte[] plain = data.getBytes();
-        SecretKey key = KeyUtil.generateRandomKey(keyDescription);
+        KeyUtil keyUtil = new KeyUtil();
+        SecretKey key = keyUtil.generateRandomKey(keyDescription);
         System.out.println(key.getAlgorithm());
         ECBCrypto crypto = new ECBCrypto(key, padding);
         byte[] encrypted = crypto.encrypt(plain);

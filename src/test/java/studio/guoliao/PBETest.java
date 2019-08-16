@@ -47,7 +47,8 @@ public class PBETest {
     private void impl(PBEAlgEnum alg) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String password = "helloworld";
         String text = "helloworld";
-        SecretKey key = KeyUtil.generatePBEKey(alg, password);
+        KeyUtil keyUtil = new KeyUtil();
+        SecretKey key = keyUtil.generatePBEKey(alg, password);
         PBECrypto crypto = new PBECrypto(key, alg);
         byte[] buf = crypto.encrypt(text.getBytes());
         System.out.println(Base64.encodeBase64String(buf));

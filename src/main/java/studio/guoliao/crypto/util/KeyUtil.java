@@ -1,5 +1,6 @@
 package studio.guoliao.crypto.util;
 
+import studio.guoliao.crypto.ProviderChangeable;
 import studio.guoliao.crypto.ProviderHolder;
 import studio.guoliao.crypto.constant.PBEAlgEnum;
 import studio.guoliao.crypto.model.KeyDescription;
@@ -22,16 +23,15 @@ import java.security.spec.InvalidKeySpecException;
  * Time: 下午6:08
  * Description: 提供常见的密钥操作
  */
-public class KeyUtil {
+public class KeyUtil implements ProviderChangeable {
 
-    /**
-     * 根据指定算法、长度、随记数种子产生一个固定密钥
-     * @param randomAlg 随机器算法
-     * @param randomSeed 随机数种子
-     * @see KeyDescription
-     * */
-    public static SecretKey generateSameKey(KeyDescription keyDescription, String randomAlg, byte[] randomSeed) throws NoSuchAlgorithmException {
-        return generateSameKey(keyDescription, randomAlg, randomSeed, ProviderHolder.PROVIDER);
+    private ProviderHolder providerHolder = ProviderHolder.newInstance();
+
+    public KeyUtil() {
+    }
+
+    public KeyUtil(ProviderHolder providerHolder) {
+        this.providerHolder = providerHolder;
     }
 
     /**
@@ -40,12 +40,11 @@ public class KeyUtil {
      * @param randomSeed 随机数种子
      * @see KeyDescription
      * */
-    public static SecretKey generateSameKey(KeyDescription keyDescription,
-                                            String randomAlg, byte[] randomSeed, 
-                                            Provider provider) throws NoSuchAlgorithmException {
+    public SecretKey generateSameKey(KeyDescription keyDescription,
+                                            String randomAlg, byte[] randomSeed) throws NoSuchAlgorithmException {
         SecureRandom secureRandom = SecureRandom.getInstance(randomAlg);
         secureRandom.setSeed(randomSeed);
-        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), provider);
+        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg());
         generator.init(secureRandom);
         return generator.generateKey();
     }
@@ -54,18 +53,9 @@ public class KeyUtil {
      * 根据指定算法、长度产生一个随机密钥
      * @see KeyDescription
      * */
-    public static SecretKey generateRandomKey(KeyDescription keyDescription) throws NoSuchAlgorithmException {
-        return generateRandomKey(keyDescription, ProviderHolder.PROVIDER);
-    }
-
-    /**
-     * 根据指定算法、长度产生一个随机密钥
-     * @see KeyDescription
-     * */
-    public static SecretKey generateRandomKey(KeyDescription keyDescription, 
-                                              Provider provider) throws NoSuchAlgorithmException {
+    public SecretKey generateRandomKey(KeyDescription keyDescription) throws NoSuchAlgorithmException {
         SecureRandom secureRandom = new SecureRandom();
-        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), provider);
+        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), providerHolder.getProvider());
         generator.init(secureRandom);
         return generator.generateKey();
     }
@@ -75,20 +65,10 @@ public class KeyUtil {
      * @param randomSeed 随机数种子
      * @see KeyDescription
      * */
-    public static SecretKey generateRandomKey(KeyDescription keyDescription, byte[] randomSeed) throws NoSuchAlgorithmException {
-        return generateRandomKey(keyDescription, randomSeed, ProviderHolder.PROVIDER);
-    }
-
-    /**
-     * 根据指定算法、长度、随记数种子产生一个随机密钥
-     * @param randomSeed 随机数种子
-     * @see KeyDescription
-     * */
-    public static SecretKey generateRandomKey(KeyDescription keyDescription, byte[] randomSeed, 
-                                              Provider provider) throws NoSuchAlgorithmException {
+    public SecretKey generateRandomKey(KeyDescription keyDescription, byte[] randomSeed) throws NoSuchAlgorithmException {
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.setSeed(randomSeed);
-        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), provider);
+        KeyGenerator generator = KeyGenerator.getInstance(keyDescription.getAlg(), providerHolder.getProvider());
         generator.init(secureRandom);
         return generator.generateKey();
     }
@@ -99,43 +79,27 @@ public class KeyUtil {
      * @param description
      * @param key 使用byte[]表示的密钥
      * @see KeyDescription*/
-    public static SecretKey generateKeyFromByteArr(KeyDescription description, byte[] key){
+    public SecretKey generateKeyFromByteArr(KeyDescription description, byte[] key){
         return new SecretKeySpec(key, description.getAlg());
     }
 
     /**
      * 产生一个pbe模式的密钥*/
-    public static SecretKey generatePBEKey(PBEAlgEnum alg, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return generatePBEKey(alg, password, ProviderHolder.PROVIDER);
+    public SecretKey generatePBEKey(PBEAlgEnum alg, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return this.generatePBEKey(alg.getValue(), password);
     }
 
     /**
      * 产生一个pbe模式的密钥*/
-    public static SecretKey generatePBEKey(PBEAlgEnum alg, String password, Provider provider) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public SecretKey generatePBEKey(String alg, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray());
-        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(alg.getValue(), provider);
-        return keyFac.generateSecret(pbeKeySpec);
-    }
-
-    /**
-     * 产生一个pbe模式的密钥*/
-    public static SecretKey generatePBEKey(String alg, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray());
-        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(alg, ProviderHolder.PROVIDER);
-        return keyFac.generateSecret(pbeKeySpec);
-    }
-
-    /**
-     * 产生一个pbe模式的密钥*/
-    public static SecretKey generatePBEKey(String alg, String password, Provider provider) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray());
-        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(alg, provider);
+        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(alg, providerHolder.getProvider());
         return keyFac.generateSecret(pbeKeySpec);
     }
 
     /**
      * 从x509中获取公钥*/
-    public static PublicKey generatePublicKeyFromX509(byte[] buf) throws IOException, NoSuchAlgorithmException, CertificateException {
+    public PublicKey generatePublicKeyFromX509(byte[] buf) throws IOException, NoSuchAlgorithmException, CertificateException {
         PublicKey key = null;
         String type = "X.509";
         try(InputStream in = new ByteArrayInputStream(buf)){
@@ -146,7 +110,7 @@ public class KeyUtil {
 
     /**
      * 从x509文件中获取公钥*/
-    public static PublicKey generatePublicKeyFromX509(File file) throws IOException, NoSuchAlgorithmException, CertificateException {
+    public PublicKey generatePublicKeyFromX509(File file) throws IOException, NoSuchAlgorithmException, CertificateException {
         PublicKey key = null;
         String type = "X.509";
         try(FileInputStream in = new FileInputStream(file)){
@@ -155,20 +119,16 @@ public class KeyUtil {
         return key;
     }
 
-    public static KeyPair generateKeyPair(KeyDescription keyDescription) throws NoSuchAlgorithmException {
-        return generateKeyPair(keyDescription, ProviderHolder.PROVIDER);
-    }
-
-    public static KeyPair generateKeyPair(KeyDescription keyDescription, Provider provider) throws NoSuchAlgorithmException {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance(keyDescription.getAlg(), provider);
+    public KeyPair generateKeyPair(KeyDescription keyDescription) throws NoSuchAlgorithmException {
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(keyDescription.getAlg(), providerHolder.getProvider());
         generator.initialize(keyDescription.getLength());
         return generator.genKeyPair();
     }
 
     /**
      * @param type  jks PKCS12*/
-    public static KeyStore readKeyStore(String type, InputStream in, String password) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
-        KeyStore keyStore = KeyStore.getInstance(type, ProviderHolder.PROVIDER);
+    public KeyStore readKeyStore(String type, InputStream in, String password) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+        KeyStore keyStore = KeyStore.getInstance(type, providerHolder.PROVIDER);
         if(password == null){
             keyStore.load(in, null);
         }else{
@@ -177,11 +137,16 @@ public class KeyUtil {
         return keyStore;
     }
 
-    private static PublicKey generatePublicKeyFromX509(String alg, InputStream in) throws IOException, NoSuchAlgorithmException, CertificateException {
+    private PublicKey generatePublicKeyFromX509(String alg, InputStream in) throws IOException, NoSuchAlgorithmException, CertificateException {
         PublicKey key = null;
-        CertificateFactory factory = CertificateFactory.getInstance(alg, ProviderHolder.PROVIDER);
+        CertificateFactory factory = CertificateFactory.getInstance(alg, providerHolder.getProvider());
         Certificate cert = factory.generateCertificate(in);
         key = cert.getPublicKey();
         return key;
+    }
+
+    @Override
+    public void setProviderHolder(ProviderHolder providerHolder) {
+        this.providerHolder = providerHolder;
     }
 }

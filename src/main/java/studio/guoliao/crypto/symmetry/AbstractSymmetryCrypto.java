@@ -9,7 +9,6 @@ import studio.guoliao.crypto.Crypto;
 import studio.guoliao.crypto.ProviderHolder;
 
 import java.security.Key;
-import java.security.Provider;
 
 /**
  * User: guoliao
@@ -21,7 +20,7 @@ public abstract class AbstractSymmetryCrypto implements Crypto {
 
     static final Logger LOGGER = LoggerFactory.getLogger(AbstractSymmetryCrypto.class);
 
-    protected Provider provider = ProviderHolder.PROVIDER;
+    ProviderHolder providerHolder = ProviderHolder.newInstance();
 
     protected Key key;
 
@@ -50,7 +49,7 @@ public abstract class AbstractSymmetryCrypto implements Crypto {
     }
 
     @Override
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setProviderHolder(ProviderHolder providerHolder){
+        this.providerHolder = providerHolder;
     }
 }

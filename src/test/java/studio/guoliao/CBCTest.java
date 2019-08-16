@@ -87,7 +87,8 @@ public class CBCTest {
 
     private void testImpl(String data, KeyDescription keyDescription, PaddingEnum padding, byte[] iv) throws NoSuchAlgorithmException {
         byte[] plain = data.getBytes();
-        SecretKey key = KeyUtil.generateRandomKey(keyDescription);
+        KeyUtil keyUtil = new KeyUtil();
+        SecretKey key = keyUtil.generateRandomKey(keyDescription);
         System.out.println(key.getAlgorithm());
         CBCCrypto crypto = new CBCCrypto(key, padding, iv);
         byte[] encrypted = crypto.encrypt(plain);

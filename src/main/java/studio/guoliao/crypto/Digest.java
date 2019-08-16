@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
  * Time: 下午6:00
  * Description: 摘要算法功能
  */
-public interface Digest extends ProviderHolder {
+public interface Digest extends ProviderChangeable {
 
     byte[] digest(byte[] data) throws NoSuchAlgorithmException;
 
