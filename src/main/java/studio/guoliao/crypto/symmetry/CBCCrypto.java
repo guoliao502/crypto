@@ -26,25 +26,28 @@ public class CBCCrypto extends AbstractSymmetryCrypto {
 
     private byte[] iv;
 
-    public CBCCrypto(PaddingEnum paddingEnum, byte[] iv) {
-        super();
-        this.padding = paddingEnum.getValue();
-        this.iv = iv;
+    public CBCCrypto(Key key, byte[] iv) {
+        this(key, PaddingEnum.P5_PADDING, iv);
     }
 
-    public CBCCrypto(String padding, byte[] iv) {
+    public CBCCrypto(Key key, PaddingEnum paddingEnum, byte[] iv) {
+        this(key, paddingEnum.getValue(), iv);
+    }
+
+    public CBCCrypto(Key key, String padding, byte[] iv) {
         super();
         this.padding = padding;
         this.iv = iv;
+        this.key = key;
     }
 
     @Override
-    public byte[] encrypt(Key key, byte[] data) {
+    public byte[] encrypt(byte[] data) {
         return cryptoImpl(Cipher.ENCRYPT_MODE, data, key);
     }
 
     @Override
-    public byte[] decrypt(Key key, byte[] encryptedData) {
+    public byte[] decrypt(byte[] encryptedData) {
         return cryptoImpl(Cipher.DECRYPT_MODE, encryptedData, key);
     }
 

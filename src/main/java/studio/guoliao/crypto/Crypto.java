@@ -2,8 +2,6 @@ package studio.guoliao.crypto;
 
 import org.apache.commons.codec.DecoderException;
 
-import java.security.Key;
-
 /**
  * User: guoliao
  * Date: 2019/7/23
@@ -12,15 +10,15 @@ import java.security.Key;
  */
 public interface Crypto extends ProviderHolder {
 
-    byte[] encrypt(Key key, byte[] data);
+    byte[] encrypt(byte[] data);
 
-    String encryptToBase64(Key key, byte[] data);
+    String encryptToBase64(byte[] data);
 
-    String encryptToHex(Key key, byte[] data);
+    String encryptToHex(byte[] data);
 
-    byte[] decrypt(Key key, byte[] encryptedData);
+    byte[] decrypt(byte[] encryptedData);
 
-    byte[] decryptFromBase64(Key key, String encryptedData);
+    byte[] decryptFromBase64(String encryptedData);
 
-    byte[] decryptFromHex(Key key, String encryptedData) throws DecoderException;
+    byte[] decryptFromHex(String encryptedData) throws DecoderException;
 }

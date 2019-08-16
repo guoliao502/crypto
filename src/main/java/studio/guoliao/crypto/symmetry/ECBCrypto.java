@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
  * Time: 下午5:35
  * Description: ecb加密模式
  *  如果需要使用nopadding模式，需要数据长度为64的整数倍
+ *  默认使用pkcs5padding
  */
 public class ECBCrypto extends AbstractSymmetryCrypto{
 
@@ -23,21 +24,26 @@ public class ECBCrypto extends AbstractSymmetryCrypto{
 
     private String padding;
 
-    public ECBCrypto(PaddingEnum padding) {
-        this.padding = padding.getValue();
+    public ECBCrypto(Key key){
+        this(key, PaddingEnum.P5_PADDING);
     }
 
-    public ECBCrypto(String padding) {
+    public ECBCrypto(Key key, PaddingEnum padding) {
+        this(key, padding.getValue());
+    }
+
+    public ECBCrypto(Key key, String padding) {
         this.padding = padding;
+        this.key = key;
     }
 
     @Override
-    public byte[] encrypt(Key key, byte[] data) {
+    public byte[] encrypt(byte[] data) {
         return cryptoImpl(Cipher.ENCRYPT_MODE, data, key);
     }
 
     @Override
-    public byte[] decrypt(Key key, byte[] encryptedData) {
+    public byte[] decrypt(byte[] encryptedData) {
         return cryptoImpl(Cipher.DECRYPT_MODE, encryptedData, key);
     }
 

@@ -89,12 +89,12 @@ public class CBCTest {
         byte[] plain = data.getBytes();
         SecretKey key = KeyUtil.generateRandomKey(keyDescription);
         System.out.println(key.getAlgorithm());
-        CBCCrypto crypto = new CBCCrypto(padding, iv);
-        byte[] encrypted = crypto.encrypt(key, plain);
+        CBCCrypto crypto = new CBCCrypto(key, padding, iv);
+        byte[] encrypted = crypto.encrypt(plain);
         Base64 base64 = new Base64();
         String val = base64.encodeToString(encrypted);
         System.out.println(val);
-        byte[] decrypt = crypto.decrypt(key, encrypted);
+        byte[] decrypt = crypto.decrypt(encrypted);
         Assert.assertTrue(Arrays.equals(plain, decrypt));
     }
 }

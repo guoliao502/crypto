@@ -23,33 +23,35 @@ public class PBECrypto extends AbstractSymmetryCrypto {
 
     private String alg;
 
-    public PBECrypto(PBEAlgEnum pbeAlgEnum) {
-        this(pbeAlgEnum.getValue());
+    public PBECrypto(Key key, PBEAlgEnum pbeAlgEnum) {
+        this(key, pbeAlgEnum.getValue());
     }
 
-    public PBECrypto(String alg) {
+    public PBECrypto(Key key, String alg) {
         super();
         this.alg = alg;
+        this.key = key;
     }
 
-    public PBECrypto(PBEAlgEnum pbeAlg, byte[] slat, int iterationCount) {
-        this(pbeAlg.getValue(), slat, iterationCount);
+    public PBECrypto(Key key,PBEAlgEnum pbeAlg, byte[] slat, int iterationCount) {
+        this(key, pbeAlg.getValue(), slat, iterationCount);
     }
 
-    public PBECrypto(String alg, byte[] slat, int iterationCount) {
+    public PBECrypto(Key key, String alg, byte[] slat, int iterationCount) {
         super();
         this.slat = slat;
+        this.key = key;
         this.iterationCount = iterationCount;
         this.alg = alg;
     }
 
     @Override
-    public byte[] encrypt(Key key, byte[] data) {
+    public byte[] encrypt(byte[] data) {
         return cryptoImpl(Cipher.ENCRYPT_MODE, key, data);
     }
 
     @Override
-    public byte[] decrypt(Key key, byte[] encryptedData) {
+    public byte[] decrypt(byte[] encryptedData) {
         return cryptoImpl(Cipher.DECRYPT_MODE, key, encryptedData);
     }
 

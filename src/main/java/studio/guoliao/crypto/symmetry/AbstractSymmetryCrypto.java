@@ -19,32 +19,34 @@ import java.security.Provider;
  */
 public abstract class AbstractSymmetryCrypto implements Crypto {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(AbstractSymmetryCrypto.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(AbstractSymmetryCrypto.class);
 
     protected Provider provider = ProviderHolder.PROVIDER;
 
+    protected Key key;
+
     @Override
-    public String encryptToBase64(Key key, byte[] data) {
-        byte[] buf = encrypt(key, data);
+    public String encryptToBase64(byte[] data) {
+        byte[] buf = encrypt(data);
         return Base64.encodeBase64String(buf);
     }
 
     @Override
-    public String encryptToHex(Key key, byte[] data) {
-        byte[] buf = encrypt(key, data);
+    public String encryptToHex(byte[] data) {
+        byte[] buf = encrypt(data);
         return Hex.encodeHexString(buf);
     }
 
     @Override
-    public byte[] decryptFromBase64(Key key, String encryptedData) {
+    public byte[] decryptFromBase64(String encryptedData) {
         byte[] buf = Base64.decodeBase64(encryptedData);
-        return decrypt(key, buf);
+        return decrypt(buf);
     }
 
     @Override
-    public byte[] decryptFromHex(Key key, String encryptedData) throws DecoderException {
+    public byte[] decryptFromHex(String encryptedData) throws DecoderException {
         byte[] buf = Hex.decodeHex(encryptedData.toCharArray());
-        return decrypt(key, buf);
+        return decrypt(buf);
     }
 
     @Override
